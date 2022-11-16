@@ -48,7 +48,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private static final int REQUEST_ENABLE_BT = 3;
     private static final int PERMISSION_COARSE_LOCATION = 2;
     private static final int REQUEST_FINE_LOCATION = 125;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     MTCentralManager mtCentralManager;
     BluetoothState bluetoothState;
     RecyclerView recyclerView;
-    RecycleAdapter mAdapter;
+    MTMagazinAdapter mAdapter;
     List<MTPeripheral> mtPeripherals = new ArrayList<>();
     public static MTPeripheral mtPeripheral;
 
@@ -73,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        /*NavController navController = Navigation.findNavController(this, R.id.);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);*/
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,11 +183,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void MTCentralManager_OnInitView() {
-        recyclerView = new RecyclerView(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RecycleAdapter();
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL));
+        recyclerView = this.findViewById(R.id.mytextView);
+
+
     }
 
     private void MTCentralManager_OnInitListener() {
@@ -196,10 +193,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScanedPeripheral(final List<MTPeripheral> peripherals) {
                 Log.e("MCA :", " " + peripherals.size());
-                mAdapter.setData(peripherals);
+                mAdapter = new MTMagazinAdapter();
+                mAdapter.SetData(peripherals);
+                recyclerView.setAdapter(mAdapter);
             }
         });
-        mAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
+        /*mAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 mtPeripheral = mAdapter.getData(position);
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(View view, int position) {
 
             }
-        });
+        });*/
     }
 
     private ConnectionStatueListener connectionStatueListener = new ConnectionStatueListener() {
@@ -347,10 +346,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
+    }*/
 }
