@@ -41,18 +41,19 @@ import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    ProgressBar progressBar;
     private static final int REQUEST_ENABLE_BT = 3;
     private static final int PERMISSION_COARSE_LOCATION = 2;
     private static final int REQUEST_FINE_LOCATION = 125;
-
-    RecyclerView mRecycle;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-
+        progressBar=findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         /*NavController navController = Navigation.findNavController(this, R.id.);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);*/
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         getRequiredPermissions();
         MTCentralManager_OnInitListener();
         mtCentralManager.stopScan();
+
 
     }
 
@@ -183,8 +186,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void MTCentralManager_OnInitView() {
-        recyclerView = this.findViewById(R.id.mytextView);
-
+        recyclerView = this.findViewById(R.id.rvlist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter=new MTMagazinAdapter();
 
     }
 
@@ -193,23 +197,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScanedPeripheral(final List<MTPeripheral> peripherals) {
                 Log.e("MCA :", " " + peripherals.size());
-                mAdapter = new MTMagazinAdapter();
-                mAdapter.SetData(peripherals);
-                recyclerView.setAdapter(mAdapter);
+                //mAdapter = new MTMagazinAdapter();
+                if(peripherals.size()>0) {
+                    mAdapter.SetData(peripherals);
+                    recyclerView.setAdapter(mAdapter);
+                    AlphaAnimation alphaAnimation=new AlphaAnimation(1.0f,0.0f);
+                    alphaAnimation.setDuration(2000);
+                    alphaAnimation.setFillAfter(true);
+                    alphaAnimation.setAnimationListener(new Animation.AnimationListener(){
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void  onAnimationEnd(Animation animation){
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    progressBar.startAnimation(alphaAnimation);
+                }
             }
         });
-        /*mAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new MTMagazinAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mtPeripheral = mAdapter.getData(position);
-                mtCentralManager.connect(mtPeripheral, connectionStatueListener);
+                if(mAdapter!=null) {
+                    mtPeripheral = mAdapter.getData(position);
+                    Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
+                    mtCentralManager.connect(mtPeripheral, connectionStatueListener);
+                }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
 
             }
-        });*/
+        });
     }
 
     private ConnectionStatueListener connectionStatueListener = new ConnectionStatueListener() {

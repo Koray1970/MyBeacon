@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:focusable="auto"
+    >
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mytextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="42px"
+        >
+
+    </com.google.android.material.button.MaterialButton>
+    <!--<TextView
         android:id="@+id/mytextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:textSize="42px"
+        android:text="" />-->
 </LinearLayout>
