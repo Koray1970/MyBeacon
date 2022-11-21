@@ -5,97 +5,98 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.minew.beaconplus.sdk.MTPeripheral;
 
 import java.util.List;
 
-public class MTMagazinAdapter extends RecyclerView.Adapter<MTMagazinAdapter.ViewHolder> {
-    private List<MTPeripheral> LocalDataSet;
+public class MTMagazinAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public List<MTPeripheral> mData;
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup,int viewType){
-        View view= LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycleviewitem,viewGroup,false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        viewHolder = new ViewHolder(View.inflate(parent.getContext(), R.layout.recycleviewitem, null));
+        return viewHolder;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        private final TextView textView;
-        public ViewHolder(View view){
-            super(view);
-            textView=(TextView) view.findViewById(R.id.mytextView);
-        }
-        public void setDataAndUi(MTPeripheral mtPeripheral) {
-            textView.setText(mtPeripheral.mMTFrameHandler.getMac());
-        }
-        public TextView getTextView(){
-            return textView;
-        }
-    }
     public MTPeripheral getData(int position) {
-        return LocalDataSet.get(position);
+        return mData.get(position);
     }
 
-    public interface OnItemClickListener{
-        void onItemClick(View view,int position);
-        void onItemLongClick(View view,int position);
+    public interface OnClickListener {
+
+        /*void OnItemClickCheck(View view, int position);*/
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
     }
 
-    private OnItemClickListener mOnItemClickListener;
+    private OnClickListener mOnItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener _mOnItemClickListener){
-
-        this.mOnItemClickListener=_mOnItemClickListener;
+    public void setOnItemClickListener(OnClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder,final int position){
-        ((ViewHolder) viewHolder).setDataAndUi(LocalDataSet.get(position));
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        ((ViewHolder) holder).setDataAndUi(mData.get(position),position);
+       /* holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getLayoutPosition();
+                mOnItemClickListener.onClick(holder.itemView, pos);
+            }
+        });*/
 
-        //viewHolder.getTextView().setText(LocalDataSet.get(position).mMTFrameHandler.getMac());
-        if (mOnItemClickListener != null) {
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    int pos = viewHolder.getLayoutPosition();
-                    String _tt="position :"+pos;
-                    Toast.makeText(v.getContext(), "tt", Toast.LENGTH_SHORT).show();
-                    Log.v("TAG"," position :"+pos);
-                    mOnItemClickListener.onItemClick(viewHolder.itemView, pos);
-                }
-            });
-            viewHolder.getTextView().setOnLongClickListener(new View.OnLongClickListener() {
+            /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    int pos = viewHolder.getLayoutPosition();
-                    mOnItemClickListener.onItemLongClick(viewHolder.itemView, pos);
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickListener.onItemLongClick(holder.itemView, pos);
                     return false;
                 }
-            });
-        }
+            });*/
+
     }
 
-
-
-
-
-
-
     @Override
-    public int getItemCount(){
-        if(LocalDataSet!=null)
-            return LocalDataSet.size();
+    public int getItemCount() {
+        if (mData != null) {
+            return mData.size();
+        }
         return 0;
     }
 
-    public void SetData(List<MTPeripheral> dataset){
-        LocalDataSet=dataset;
+    public void setData(List<MTPeripheral> data) {
+        mData = data;
         notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        MaterialButton data;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            data = (MaterialButton) itemView.findViewById(R.id.mytextView);
+        }
+
+        public void setDataAndUi(MTPeripheral mtPeripheral,int position) {
+            data.setText(mtPeripheral.mMTFrameHandler.getMac());
+            data.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onClick(v, position);
+                }
+            });
+        }
     }
 
 

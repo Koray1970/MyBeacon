@@ -3,6 +3,7 @@ package com.example.mybeacon;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -49,6 +50,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private static final int REQUEST_ENABLE_BT = 3;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     MTCentralManager mtCentralManager;
     BluetoothState bluetoothState;
+
     RecyclerView recyclerView;
     MTMagazinAdapter mAdapter;
     List<MTPeripheral> mtPeripherals = new ArrayList<>();
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-        progressBar=findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         /*NavController navController = Navigation.findNavController(this, R.id.);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth desteklenmiyor", Toast.LENGTH_LONG).show();
         }
+        recyclerView = findViewById(R.id.rvlist);
         MTCentralManager_OnInitView();
         MTCentralManager_OnInit();
         getRequiredPermissions();
@@ -186,56 +190,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void MTCentralManager_OnInitView() {
-        recyclerView = this.findViewById(R.id.rvlist);
+        //
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter=new MTMagazinAdapter();
-
+        mAdapter = new MTMagazinAdapter();
+        recyclerView.setAdapter(mAdapter);
     }
+
 
     private void MTCentralManager_OnInitListener() {
         mtCentralManager.setMTCentralManagerListener(new MTCentralManagerListener() {
             @Override
             public void onScanedPeripheral(final List<MTPeripheral> peripherals) {
-                Log.e("MCA :", " " + peripherals.size());
-                //mAdapter = new MTMagazinAdapter();
-                if(peripherals.size()>0) {
-                    mAdapter.SetData(peripherals);
-                    recyclerView.setAdapter(mAdapter);
-                    AlphaAnimation alphaAnimation=new AlphaAnimation(1.0f,0.0f);
-                    alphaAnimation.setDuration(2000);
-                    alphaAnimation.setFillAfter(true);
-                    alphaAnimation.setAnimationListener(new Animation.AnimationListener(){
-                        @Override
-                        public void onAnimationStart(Animation animation) {
+                Log.v("MCA :", " " + peripherals.size());
 
-                        }
+                mAdapter.setData(peripherals);
+                AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+                alphaAnimation.setDuration(2000);
+                alphaAnimation.setFillAfter(true);
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                        @Override
-                        public void  onAnimationEnd(Animation animation){
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
+                    }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
 
-                        }
-                    });
-                    progressBar.startAnimation(alphaAnimation);
-                }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                progressBar.startAnimation(alphaAnimation);
+
             }
         });
-        mAdapter.setOnItemClickListener(new MTMagazinAdapter.OnItemClickListener() {
+
+        mAdapter.setOnItemClickListener(new MTMagazinAdapter.OnClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                if(mAdapter!=null) {
-                    mtPeripheral = mAdapter.getData(position);
-                    Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
-                    mtCentralManager.connect(mtPeripheral, connectionStatueListener);
-                }
+            public void onClick(View view, int position) {
+                mtPeripheral = mAdapter.getData(position);
+                Log.e("tagOnItemClick", "PositionQ : " + position);
+
+                AlertDialog.Builder abuilder = new AlertDialog.Builder(MainActivity.this);
+                abuilder.setMessage(Integer.toString(position));
+                abuilder.setCancelable(false);
+                AlertDialog alertDialog = abuilder.create();
+                alertDialog.show();
+
+                mtCentralManager.connect(mtPeripheral, connectionStatueListener);
             }
 
+            /* @Override
+             public void OnItemClickCheck(View view,int position) {
+                 String rr = Integer.toString(position);
+                 Log.e("tagOnItemClick", "Position : "+rr);
+                 Toast.makeText(MainActivity.this, rr, Toast.LENGTH_SHORT).show();
+
+             }*/
             @Override
-            public void onItemLongClick(View view, int position) {
+            public void onLongClick(View view, int position) {
 
             }
         });
@@ -295,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "COMPLETED", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();
                             //intent.setClass(MainActivity.this, DetailActivity.class);
-                            startActivity(intent);
+                            //startActivity(intent);
                             break;
                         case CONNECTFAILED:
                         case DISCONNECTED:
@@ -310,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onError(MTException e) {
-            Log.e("tag",e.getErrorCode()+" - "+ e.getMessage());
+            Log.e("tag", e.getErrorCode() + " - " + e.getMessage());
         }
     };
 

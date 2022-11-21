@@ -5,15 +5,14 @@
     android:orientation="horizontal"
     android:focusable="auto"
     >
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/mytextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="42px"
-        >
-
-    </com.google.android.material.button.MaterialButton>
+        ></com.google.android.material.button.MaterialButton>
     <!--<TextView
         android:id="@+id/mytextView"
         android:layout_width="wrap_content"
