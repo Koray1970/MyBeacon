@@ -234,11 +234,11 @@ public class MainActivity extends AppCompatActivity {
                 mtPeripheral = mAdapter.getData(position);
                 Log.e("tagOnItemClick", "PositionQ : " + position);
 
-                AlertDialog.Builder abuilder = new AlertDialog.Builder(MainActivity.this);
+                /*AlertDialog.Builder abuilder = new AlertDialog.Builder(MainActivity.this);
                 abuilder.setMessage(Integer.toString(position));
                 abuilder.setCancelable(false);
                 AlertDialog alertDialog = abuilder.create();
-                alertDialog.show();
+                alertDialog.show();*/
 
                 mtCentralManager.connect(mtPeripheral, connectionStatueListener);
             }
@@ -310,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("tag", "COMPLETED");
                             Toast.makeText(MainActivity.this, "COMPLETED", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();
-                            //intent.setClass(MainActivity.this, DetailActivity.class);
-                            //startActivity(intent);
+                            intent.setClass(MainActivity.this, MagazinDetail.class);
+                            startActivity(intent);
                             break;
                         case CONNECTFAILED:
                         case DISCONNECTED:
@@ -368,7 +368,11 @@ public class MainActivity extends AppCompatActivity {
         mtCentralManager.startScan();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mtCentralManager.stopService();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
