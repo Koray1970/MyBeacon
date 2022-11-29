@@ -92,8 +92,8 @@ public class MagazinDetail extends AppCompatActivity implements View.OnClickList
                     trigger.setAlwaysAdvertising(false);//true：always broadcast, false: not always broadcast
                 }
 
-                TextView txt=findViewById(R.id.tv_set);
-                txt.setText(this.mMTConnectionHandler.triggers);
+                /*TextView txt=findViewById(R.id.tv_set);
+                txt.setText(this.mMTConnectionHandler.triggers);*/
 
                 this.mMTConnectionHandler.setTriggerCondition(trigger, new SetTriggerListener() {
                     @Override
