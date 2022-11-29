@@ -83,6 +83,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //map page click
+        MaterialButton mappagebtn=(MaterialButton)findViewById(R.id.mappagebtn);
+        mappagebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(MainActivity.this,Map.class);
+                startActivity(i);
+            }
+        });
+
         setSupportActionBar(binding.toolbar);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -98,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
         //start::minew
+
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth desteklenmiyor", Toast.LENGTH_LONG).show();
         }
@@ -343,14 +355,14 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int code, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(code, permissions, grantResults);
         switch (code) {
-//            case PERMISSION_COARSE_LOCATION:
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    initData();
-//                } else {
-//                    finish();
-//                }
-//                break;
+            case PERMISSION_COARSE_LOCATION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initData();
+                } else {
+                    finish();
+                }
+                break;
             case REQUEST_FINE_LOCATION:
                 boolean isGrant = true;
                 for (int grantResult : grantResults) {
@@ -360,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (isGrant) {
-//                    initData();
                     if (!isBLEEnabled()) {
                         showBLEDialog();
                     } else {
