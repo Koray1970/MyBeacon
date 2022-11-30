@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        //binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         MaterialButton qrcodescanner=(MaterialButton)findViewById(R.id.scanqrcode);
         qrcodescanner.setOnClickListener(new View.OnClickListener() {
@@ -83,16 +83,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        //map page click
-        MaterialButton mappagebtn=(MaterialButton)findViewById(R.id.mappagebtn);
-        mappagebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i =new Intent(MainActivity.this,Map.class);
-                startActivity(i);
-            }
-        });
 
         setSupportActionBar(binding.toolbar);
         progressBar = findViewById(R.id.progressBar);
@@ -108,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-        //start::minew
+
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Bluetooth desteklenmiyor", Toast.LENGTH_LONG).show();
