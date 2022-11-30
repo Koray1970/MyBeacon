@@ -72,8 +72,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        try {
+            int time = 2 * 1000;
+            Thread.sleep(time);
+            Intent i =new Intent(MainActivity.this,DashBoard.class);
+            startActivity(i);
+        }
+        catch (Exception e){
+
+        }
         MaterialButton qrcodescanner=(MaterialButton)findViewById(R.id.scanqrcode);
         qrcodescanner.setOnClickListener(new View.OnClickListener() {
             @Override
