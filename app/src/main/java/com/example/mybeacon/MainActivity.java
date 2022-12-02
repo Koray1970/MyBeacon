@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         qrcodescanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i =new Intent(MainActivity.this,AppCodeScanner.class);
+                Intent i =new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(i);
             }
         });
