@@ -75,20 +75,20 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        try {
-            int time = 2 * 1000;
-            Thread.sleep(time);
-            Intent i =new Intent(MainActivity.this,DashBoard.class);
-            startActivity(i);
-        }
-        catch (Exception e){
 
-        }
         MaterialButton qrcodescanner=(MaterialButton)findViewById(R.id.scanqrcode);
         qrcodescanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i =new Intent(MainActivity.this, MapsActivity.class);
+                Intent i =new Intent(MainActivity.this, AppCodeScanner.class);
+                startActivity(i);
+            }
+        });
+        MaterialButton btnmapopener=(MaterialButton)findViewById(R.id.mappagebtn);
+        btnmapopener.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(MainActivity.this, DashBoard.class);
                 startActivity(i);
             }
         });
@@ -119,7 +119,14 @@ public class MainActivity extends AppCompatActivity {
         getRequiredPermissions();
         MTCentralManager_OnInitListener();
         mtCentralManager.stopScan();
+        try {
+            Thread.sleep(2000);
+            Intent i =new Intent(MainActivity.this,DashBoard.class);
+            startActivity(i);
+        }
+        catch (Exception e){
 
+        }
 
     }
 
@@ -408,7 +415,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.addbeacon) {
+            Intent i =new Intent(MainActivity.this, AppCodeScanner.class);
+            startActivity(i);
             return true;
         }
 

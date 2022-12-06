@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".DashBoard">
-
     <FrameLayout
         android:id="@+id/your_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvbeaconlist"
